@@ -5,3 +5,6 @@ Trabajo realizados con ansible durante el taller
 
 - Inventario
 - Playbooks
+- Files
+
+  
