@@ -1,0 +1,34 @@
+---
+- name: Initial centos app-php
+  hosts: centos
+  become: true
+
+tasks:
+
+ - name: Instalar Apache y  PHP
+   ansible.builtin.dnf:
+    name: httpd php php-fpm php-mysqlnd
+    sate: present
+      
+ - name: Habilitar servicios HTTPD y PHP-FPM
+   ansible.builtin.systemd_service:
+     name: "{{ item }}"
+     state: started
+     enabled: true
+     loop:
+        - httpd
+        - php-fpm 
+
+ - name: Habilitar Firewalld
+   ansible.posix.firewalld:
+     name: Firewalld
+     state: started
+     enabled: true
+
+ - name: Permitir Apache
+   ansible.posix.firewalld:
+   service: http
+   permanent: true
+   immediate: true
+   state: enable
+     
