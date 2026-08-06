@@ -1,0 +1,46 @@
+- name: Initial ubuntu mariadb
+  # Especifica el grupo de servidores de destino (definidos en tu inventario)
+  hosts: ubuntu
+  # Activa la escalada de privilegios (ejecutar como root/sudo)
+  become: true
+  # Carga un archivo externo de variables (probablemente contraseñas o credenciales de BD)
+  vars_files:
+    - ../vars/database.yaml
+
+  tasks:
+
+  # Tarea 1: Instala el servidor web, PHP y dependencias del sistema
+  - name: Instalar Apache y PHP
+    ansible.builtin.dnf:
+      name: mariadb-server,python3-libsemanage
+      state: present
+
+  # Tarea 2: Inicia y configura los servicios web para que arranquen con el sistema
+  - name: Bind mariadb a cualquier interface
+    ansible.builtin.lineinfile:
+      path: /etc/mysql/mariadb.conf.d/50-server.cnf
+      regexp: '^bind-address'
+      line: 'bind-address = 0.0.0.0'
+    notify: Reiniciar MariaDB
+
+
+  # Tarea 3: Configura el cortafuegos del sistema para permitir tráfico web público
+  - name: Iniciar MariaDB
+    ansible.posix.systemd_service:
+      name: mariadb
+      state: started
+      enabled: true
+
+  # Tarea 4: Despliega el código fuente de la aplicación usando una plantilla dinámica
+  - name: Permitir conexiones
+    community.general.ufw:
+      port: 3306
+      proto: tcp
+      rule: allow
+  
+  handlers:
+
+ - name: Reiniciar MariaDB
+   ansible.posix.systemd_service:
+     name: mariadb
+     state: restarted  

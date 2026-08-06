@@ -1,34 +1,54 @@
----
 - name: Initial centos app-php
+  # Especifica el grupo de servidores de destino (definidos en tu inventario)
   hosts: centos
+  # Activa la escalada de privilegios (ejecutar como root/sudo)
   become: true
+  # Carga un archivo externo de variables (probablemente contraseñas o credenciales de BD)
+  vars_files:
+    - ../vars/database.yaml
 
-tasks:
+  tasks:
 
- - name: Instalar Apache y  PHP
-   ansible.builtin.dnf:
-    name: httpd php php-fpm php-mysqlnd
-    sate: present
-      
- - name: Habilitar servicios HTTPD y PHP-FPM
-   ansible.builtin.systemd_service:
-     name: "{{ item }}"
-     state: started
-     enabled: true
-     loop:
+  # Tarea 1: Instala el servidor web, PHP y dependencias del sistema
+  - name: Instalar Apache y  PHP
+    ansible.builtin.dnf:
+      name: httpd,php,php-fpm,php-mysqlnd,python3-libsemanage
+      state: present
+
+  # Tarea 2: Inicia y configura los servicios web para que arranquen con el sistema
+  - name: Habilitar servicios HTTPD y PHP-FPM
+    ansible.builtin.systemd_service:
+      name: "{{ item }}"
+      state: started
+      enabled: true
+    loop:
         - httpd
-        - php-fpm 
+        - php-fpm
 
- - name: Habilitar Firewalld
-   ansible.posix.firewalld:
-     name: Firewalld
-     state: started
-     enabled: true
+  # Tarea 3: Configura el cortafuegos del sistema para permitir tráfico web público
+  - name: Permitir Apache
+    ansible.posix.firewalld:
+      service: http
+      permanent: true
+      immediate: true
+      state: enabled
 
- - name: Permitir Apache
-   ansible.posix.firewalld:
-   service: http
-   permanent: true
-   immediate: true
-   state: enable
-     
+  # Tarea 4: Despliega el código fuente de la aplicación usando una plantilla dinámica
+  - name: Install php application
+    ansible.builtin.template:
+      src: ../templates/cumple.j2
+      dest: /var/www/html/index.php
+      mode: '0644'
+      owner: apache
+      group: apache
+
+  # Tarea 5: Configura las políticas de seguridad de SELinux en el sistema
+  - name: Set selinux booleans for database acces from apache
+    ansible.posix.seboolean:
+      name: "{{ item }}"
+      state: true
+      persistent: true
+    loop:
+      - httpd_can_network_connect
+      - httpd_can_network_connect_db
+
