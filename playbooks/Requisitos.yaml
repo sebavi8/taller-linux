@@ -28,6 +28,11 @@
         key: "{{ lookup('ansible.builtin.file', req_pubkey_file) }}"
         state: present
         exclusive: false
+        
+    - name: Comprobar si visudo esta disponible para validar el sudoers
+      ansible.builtin.stat:
+        path: /usr/sbin/visudo
+      register: r_visudo
  
     - name: Habilitar sudo sin password para el usuario de automatización
       ansible.builtin.copy:
