@@ -2,7 +2,7 @@
 - name: Requisitos para taller-linux
   hosts: localhost
   connection: local
-gather_facts: false
+  gather_facts: false
   vars:
     req_ssh_user: sysadmin
     req_user: ansible
