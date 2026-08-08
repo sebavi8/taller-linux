@@ -6,3 +6,12 @@ db_table: cumpleanios
 db_app_user: "{{ DB_USER }}"
 db_app_password: "{{ DB_PASS }}"
 db_port: 3306
+
+web_host: "{{ hostvars['centos'].ansible_host }}"
+db_host: "{{ hostvars['ubuntu'].ansible_host }}"
+ 
+# --- Datos iniciales de la tabla -----------------------------------------
+cumpleanios_seed:
+  - { nombre: "Frodo Baggins", fecha: "2005-01-14" }
+  - { nombre: "Aragorn", fecha: "2004-02-09" }
+  - { nombre: "Arwen Undomiel", fecha: "1994-12-09" }
