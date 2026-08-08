@@ -58,4 +58,3 @@
           - whoami.stdout == 'root'
         success_msg: "Escalada a root correcta en {{ inventory_hostname }}"
         fail_msg: "Escalada a root fallida en {{ inventory_hostname }}"
-tiene menú contextual
