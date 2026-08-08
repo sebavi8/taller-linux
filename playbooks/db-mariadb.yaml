@@ -9,11 +9,12 @@
 
   tasks:
 
-  # Tarea 1: Instala el servidor web, PHP y dependencias del sistema
-  - name: Instalar Apache y PHP
-    ansible.builtin.dnf:
-      name: mariadb-server,python3-libsemanage
+  # Tarea 1: Instala Mariadb y dependencias
+  - name: Instalar Mariadb y dependencias
+    ansible.builtin.apt:
+      name: mariadb-server,python3-pymysql
       state: present
+      update_cache: true
 
   # Tarea 2: Inicia y configura los servicios web para que arranquen con el sistema
   - name: Bind mariadb a cualquier interface
@@ -26,7 +27,7 @@
 
   # Tarea 3: Configura el cortafuegos del sistema para permitir tráfico web público
   - name: Iniciar MariaDB
-    ansible.posix.systemd_service:
+    ansible.builtin.systemd_service:
       name: mariadb
       state: started
       enabled: true
@@ -37,10 +38,10 @@
       port: 3306
       proto: tcp
       rule: allow
-  
+
   handlers:
 
- - name: Reiniciar MariaDB
-   ansible.posix.systemd_service:
-     name: mariadb
-     state: restarted  
+  - name: Reiniciar MariaDB
+    ansible.builtin.systemd_service:
+      name: mariadb
+      state: restarted 
