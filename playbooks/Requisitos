@@ -1,0 +1,61 @@
+---
+- name: Requisitos para taller-linux
+  hosts: localhost
+  connection: local
+gather_facts: false
+  vars:
+    req_ssh_user: sysadmin
+    req_user: ansible
+    req_pubkey_file: "{{ lookup('ansible.builtin.env', 'HOME') }}/.ssh/id_ed25519.pub"
+    admin_group: sudo
+  tasks:
+    - name: Instalar sshpass en el nodo de control
+      ansible.builtin.package:
+        name: sshpass
+        state: present
+      become: true
+ 
+    - name: Registrar fingerprint SSH de cada servidor
+      ansible.builtin.known_hosts:
+        name: "{{ hostvars[item].ansible_host }}"
+        key: "{{ lookup('ansible.builtin.pipe', 'ssh-keyscan -T 5 ' + hostvars[item].ansible_host) }}"
+        state: present
+      loop: "{{ groups['linux'] }}"
+
+    - name: Instalar clave pública en el usuario de automatización
+      ansible.posix.authorized_key:
+        user: sysadmin
+        key: "{{ lookup('ansible.builtin.file', req_pubkey_file) }}"
+        state: present
+        exclusive: false
+ 
+    - name: Habilitar sudo sin password para el usuario de automatización
+      ansible.builtin.copy:
+        content: "sysadmin ALL=(ALL) NOPASSWD: ALL\n"
+        dest: /etc/sudoers.d/90-ansible
+        owner: root
+        group: root
+        mode: "0440"
+        validate: "{{ '/usr/sbin/visudo -cf %s' if r_visudo.stat.exists else omit }}"
+ 
+- name: Verificar acceso sin password
+  hosts: linux
+  gather_facts: false
+  tasks:
+    - name: Probar ping de Ansible
+      ansible.builtin.ping:
+ 
+    - name: Comprobar escalada a root
+      ansible.builtin.command:
+        cmd: id -un
+      become: true
+      changed_when: false
+      register: whoami
+ 
+    - name: Confirmar escalada a root
+      ansible.builtin.assert:
+        that:
+          - whoami.stdout == 'root'
+        success_msg: "Escalada a root correcta en {{ inventory_hostname }}"
+        fail_msg: "Escalada a root fallida en {{ inventory_hostname }}"
+tiene menú contextual
