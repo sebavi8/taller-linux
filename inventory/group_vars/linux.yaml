@@ -1,2 +1,8 @@
 ---
 ansible_user: sysadmin
+
+db_name: cumples
+db_table: cumpleanios
+db_app_user: sysadmin
+db_app_password: xxxxx
+db_port: 3306
