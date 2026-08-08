@@ -1,0 +1,33 @@
+from_ip: "{{ centos_app_ip }}"  # Variable con la IP de tu servidor CentOS
+
+    # Tarea 5: Crear la base de datos para la aplicación
+    - name: Crear la base de datos de la aplicación
+      community.mysql.mysql_db:
+        name: "{{ db_name }}"
+        state: present
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+
+    # Tarea 6: Copiar el script SQL de datos iniciales / tablas
+    - name: Copiar archivo SQL inicial al servidor
+      ansible.builtin.copy:
+        src: ../files/schema.sql   # Ajusta la ruta a tu archivo .sql del repositorio https://github.com/emverdes/dbappphp
+        dest: /tmp/schema.sql
+        mode: '0600'
+
+    # Tarea 7: Importar las tablas y datos iniciales en la base de datos
+    - name: Importar tablas y datos iniciales
+      community.mysql.mysql_db:
+        name: "{{ db_name }}"
+        state: import
+        target: /tmp/schema.sql
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+
+    # Tarea 8: Crear usuario específico para la aplicación PHP con permisos remotos
+    - name: Crear usuario de MariaDB para el servidor de aplicación
+      community.mysql.mysql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        host: "{{ centos_app_ip }}"    # Permite la conexión proveniente desde la IP de CentOS
+        priv: "{{ db_name }}.*:ALL"
+        state: present
+        login_unix_socket: /var/run/mysqld/mysqld.sock
