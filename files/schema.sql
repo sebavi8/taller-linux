@@ -1,4 +1,4 @@
-CREATE DATABASE birthdays CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS birthdays CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE USER 'birthdayapp'@'10.%' IDENTIFIED BY 'Cumples2026!';
 GRANT ALL PRIVILEGES ON birthdays.* TO 'birthdayapp'@'10.%';
