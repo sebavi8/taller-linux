@@ -71,6 +71,7 @@
         login_unix_socket: /var/run/mysqld/mysqld.sock
 
   handlers:
+  
     - name: Reiniciar MariaDB
       ansible.builtin.systemd_service:
         name: mariadb
