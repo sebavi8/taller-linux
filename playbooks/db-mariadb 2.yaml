@@ -1,0 +1,74 @@
+- name: Initial ubuntu mariadb
+  hosts: ubuntu
+  become: true
+  vars_files:
+    - ../vars/database.yaml
+
+  tasks:
+    # Tarea 1: Instala Mariadb y dependencias
+    - name: Instalar Mariadb y dependencias
+      ansible.builtin.apt:
+        name: mariadb-server,python3-pymysql
+        state: present
+        update_cache: true
+
+    # Tarea 2: Configura bind-address
+    - name: Bind mariadb a cualquier interface
+      ansible.builtin.lineinfile:
+        path: /etc/mysql/mariadb.conf.d/50-server.cnf
+        regexp: '^bind-address'
+        line: 'bind-address = 0.0.0.0'
+      notify: Reiniciar MariaDB
+
+    # Tarea 3: Inicia MariaDB
+    - name: Iniciar MariaDB
+      ansible.builtin.systemd_service:
+        name: mariadb
+        state: started
+        enabled: true
+
+    # Tarea 4: Configura el cortafuegos
+    - name: Permitir conexiones
+      community.general.ufw:
+        port: 3306
+        proto: tcp
+        rule: allow
+
+    # Tarea 5: Crear la base de datos
+    - name: Crear la base de datos de la aplicación
+      community.mysql.mysql_db:
+        name: "{{ db_name }}"
+        state: present
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+
+    # Tarea 6: Copiar el script SQL
+    - name: Copiar archivo SQL inicial al servidor
+      ansible.builtin.copy:
+        src: ../files/schema.sql
+        dest: /tmp/schema.sql
+        mode: '0600'
+
+    # Tarea 7: Importar las tablas y datos
+    - name: Importar tablas y datos iniciales
+      community.mysql.mysql_db:
+        name: "{{ db_name }}"
+        state: import
+        target: /tmp/schema.sql
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+
+    # Tarea 8: Crear usuario de MariaDB
+    - name: Crear usuario de MariaDB para el servidor de aplicación
+      community.mysql.mysql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        host: "{{ hostvars['centos01']['ansible_host'] }}"
+        priv: "{{ db_name }}.*:ALL"
+        state: present
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+      notify: Reiniciar MariaDB
+
+  handlers:
+    - name: Reiniciar MariaDB
+      ansible.builtin.systemd_service:
+        name: mariadb
+        state: restarted
