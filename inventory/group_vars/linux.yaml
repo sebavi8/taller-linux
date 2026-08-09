@@ -2,6 +2,7 @@
 ansible_user: sysadmin
 
 db_name: "{{ DB_DBASE }}"
+db_user: "{{ DB_USER }}"
 db_table: cumpleanios
 db_app_user: "{{ DB_USER }}"
 db_app_password: "{{ DB_PASS }}"
