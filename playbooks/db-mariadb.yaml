@@ -70,7 +70,7 @@
         state: present
         login_unix_socket: /var/run/mysqld/mysqld.sock
 
-  handlers:
+handlers:
   
     - name: Reiniciar MariaDB
       ansible.builtin.systemd_service:
