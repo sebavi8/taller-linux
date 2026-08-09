@@ -1,23 +1,14 @@
-CREATE DATABASE IF NOT EXISTS birthdays CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+DROP DATABASE IF NOT EXISTS cumples IF EXISTS;
+CREATE DATABASE cumples;
+USE cumples;
 
-CREATE USER IF NOT EXISTS 'birthdayapp'@'10.%' IDENTIFIED BY 'Cumples2026!';
-GRANT ALL PRIVILEGES ON birthdays.* TO 'birthdayapp'@'10.%';
-FLUSH PRIVILEGES;
-
-USE birthdays;
-
-CREATE TABLE IF NOT EXISTS people (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    birth_date DATE NOT NULL,
-    email VARCHAR(100),
-    city VARCHAR(50)
+CREATE TABLE IF NOT EXISTS cumpleanios (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100),
+  fecha DATE
 );
 
-INSERT INTO people (first_name, last_name, birth_date, email, city) VALUES
-('Ana', 'Pérez', '1998-04-10', 'ana.perez@example.com', 'Montevideo'),
-('Luis', 'Gómez', '2001-07-15', 'luis.gomez@example.com', 'Canelones'),
-('María', 'Rodríguez', '1995-04-10', 'maria.rodriguez@example.com', 'Maldonado'),
-('Jorge', 'Silva', '1992-11-21', 'jorge.silva@example.com', 'Florida'),
-('Lucía', 'Fernández', '2000-03-08', 'lucia.fernandez@example.com', 'Colonia');
+INSERT INTO cumpleanios (nombre, fecha) VALUES
+('Frodo Baggins', '2005-01-14'),
+('Aragorn', '2004-02-09'),
+('Arwen Undomiel', '1994-12-09');
