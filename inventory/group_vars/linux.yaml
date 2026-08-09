@@ -6,6 +6,7 @@ db_user: "{{ DB_USER }}"
 db_table: cumpleanios
 db_app_user: "{{ DB_USER }}"
 db_app_password: "{{ DB_PASS }}"
+db_password: "{{ DB_PASS }}"
 db_port: 3306
 
 web_host: "{{ hostvars['centos'].ansible_host }}"
