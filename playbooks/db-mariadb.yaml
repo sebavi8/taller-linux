@@ -1,3 +1,4 @@
+---
 - name: Initial ubuntu mariadb
   hosts: ubuntu
   become: true
@@ -48,15 +49,24 @@
         dest: /tmp/schema.sql
         mode: '0600'
 
-    # Tarea 7: Importar las tablas y datos
-    - name: Importar tablas y datos iniciales
+    # Tarea 7: Importar el esquema
+    - name: Importar el esquema inicial
       community.mysql.mysql_db:
         name: "{{ db_name }}"
         state: import
         target: /tmp/schema.sql
         login_unix_socket: /var/run/mysqld/mysqld.sock
 
-    # Tarea 8: Crear usuario de MariaDB
+    # Tarea 8: Insertar datos iniciales de cumpleaños
+    - name: Insertar datos iniciales de cumpleanios
+      community.mysql.mysql_query:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        db: "{{ db_name }}"
+        query: "INSERT IGNORE INTO cumpleanios (nombre, fecha) VALUES ('{{ item.nombre }}', '{{ item.fecha }}');"
+      loop: "{{ cumpleanios_seed }}"
+      when: cumpleanios_seed is defined
+
+    # Tarea 9: Crear usuario de MariaDB
     - name: Crear usuario de MariaDB para el servidor de aplicación
       community.mysql.mysql_user:
         name: "{{ db_user }}"
