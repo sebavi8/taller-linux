@@ -1,12 +1,12 @@
 CREATE DATABASE IF NOT EXISTS birthdays CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-CREATE USER 'birthdayapp'@'10.%' IDENTIFIED BY 'Cumples2026!';
+CREATE USER IF NOT EXISTS 'birthdayapp'@'10.%' IDENTIFIED BY 'Cumples2026!';
 GRANT ALL PRIVILEGES ON birthdays.* TO 'birthdayapp'@'10.%';
 FLUSH PRIVILEGES;
 
 USE birthdays;
 
-CREATE TABLE people (
+CREATE TABLE IF NOT EXISTS people (
     id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
