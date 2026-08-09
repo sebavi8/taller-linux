@@ -1,5 +1,5 @@
 <?php
-$conexion = new mysqli("{{ DB_SERVER }}", "{{ DB_USER }}", "{{ DB_PASS }}", "{{ DB_DBASE }}");
+$conexion = new mysqli("{{ DB_SERVER }}", "{{ db_user }}", "{{ db_password }}", "{{ db_name }}");
 
 if ($conexion->connect_error) {
     die("Error de conexión: " . $conexion->connect_error);
