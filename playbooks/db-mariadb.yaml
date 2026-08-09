@@ -65,7 +65,7 @@
       community.mysql.mysql_user:
         name: "{{ db_user }}"
         password: "{{ db_password }}"
-        host: "{{ centos01 }}"
+        host: "{{ hostvars['centos']['ansible_host'] }}"
         priv: "{{ db_name }}.*:ALL"
         state: present
         login_unix_socket: /var/run/mysqld/mysqld.sock
