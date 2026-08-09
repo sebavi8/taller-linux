@@ -61,7 +61,7 @@
     - name: Insertar datos iniciales de cumpleanios
       community.mysql.mysql_query:
         login_unix_socket: /var/run/mysqld/mysqld.sock
-        db: "{{ db_name }}"
+        login_db: "{{ db_name }}"
         query: "INSERT IGNORE INTO cumpleanios (nombre, fecha) VALUES ('{{ item.nombre }}', '{{ item.fecha }}');"
       loop: "{{ cumpleanios_seed }}"
       when: cumpleanios_seed is defined
