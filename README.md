@@ -22,20 +22,20 @@ Este repositorio contiene el conjunto completo de herramientas usadas en el tall
 │   ├── group_vars       
 │   │   └── linux.yaml
 │   └── hosts.ini      
-├── LICENSE
-├── playbooks
-│   ├── app-php.yaml
-│   ├── db-mariadb.yaml
-│   ├── hardening.yaml
+├── LICENSE              
+├── playbooks             
+│   ├── app-php.yaml    
+│   ├── db-mariadb.yaml      
+│   ├── hardening.yaml    
 │   ├── reload_apache.yaml
-│   └── Requisitos.yaml
-├── README.md
+│   └── Requisitos.yaml    
+├── README.md           
 ├── reload_apache.yaml
-├── templates
-│   ├── cumple.j2
-│   └── db_config.j2
-└── vars
-    └── database.yaml
+├── templates          
+│   ├── cumple.j2       
+│   └── db_config.j2     
+└── vars                 
+    └── database.yaml    
 
 
     
