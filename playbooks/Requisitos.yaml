@@ -1,4 +1,5 @@
 ---
+# Define el play que prepara los requisitos necesarios
 - name: Requisitos para taller-linux
   hosts: localhost
   connection: local
@@ -9,31 +10,32 @@
     req_pubkey_file: "{{ lookup('ansible.builtin.env', 'HOME') }}/.ssh/id_ed25519.pub"
     admin_group: sudo
   tasks:
+  # Instala sshpass para permitir autenticación SSH mediante contraseña.
     - name: Instalar sshpass en el nodo de control
       ansible.builtin.package:
         name: sshpass
         state: present
       become: true
- 
+ # Agrega las claves SSH de los servidores al archivo known_hosts.
     - name: Registrar fingerprint SSH de cada servidor
       ansible.builtin.known_hosts:
         name: "{{ hostvars[item].ansible_host }}"
         key: "{{ lookup('ansible.builtin.pipe', 'ssh-keyscan -T 5 ' + hostvars[item].ansible_host) }}"
         state: present
       loop: "{{ groups['linux'] }}"
-
+# Añade la clave pública del nodo de control al usuario sysadmin.
     - name: Instalar clave pública en el usuario de automatización
       ansible.posix.authorized_key:
         user: sysadmin
         key: "{{ lookup('ansible.builtin.file', req_pubkey_file) }}"
         state: present
         exclusive: false
-        
+ # Comprueba si existe visudo para validar correctamente la configuración de sudo.       
     - name: Comprobar si visudo esta disponible para validar el sudoers
       ansible.builtin.stat:
         path: /usr/sbin/visudo
       register: r_visudo
- 
+ # Configura sudo para que sysadmin pueda ejecutar comandos como root sin contraseña.
     - name: Habilitar sudo sin password para el usuario de automatización
       ansible.builtin.copy:
         content: "sysadmin ALL=(ALL) NOPASSWD: ALL\n"
@@ -43,21 +45,22 @@
         mode: "0440"
         validate: "{{ '/usr/sbin/visudo -cf %s' if r_visudo.stat.exists else omit }}"
       become: true  
- 
+# Verifica que Ansible pueda conectarse y obtener privilegios de root sin contraseña. 
 - name: Verificar acceso sin password
   hosts: linux
   gather_facts: false
   tasks:
+  # Comprueba que Ansible pueda conectarse correctamente a los servidores Linux.
     - name: Probar ping de Ansible
       ansible.builtin.ping:
- 
+ # Ejecuta id -un con sudo para comprobar que la escalada de privilegios funciona.
     - name: Comprobar escalada a root
       ansible.builtin.command:
         cmd: id -un
       become: true
       changed_when: false
       register: whoami
- 
+# Verifica que el usuario efectivo después de la escalada sea root.
     - name: Confirmar escalada a root
       ansible.builtin.assert:
         that:
