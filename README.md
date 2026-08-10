@@ -13,15 +13,15 @@ Este repositorio contiene el conjunto completo de herramientas usadas en el tall
  
 ### Estructura del repositorio
 .
-├── collections
+├── collections          
 │   └── requirements.yaml
-├── files
+├── files                
 │   ├── jail.local
 │   └── schema.sql
-├── inventory
-│   ├── group_vars
+├── inventory           
+│   ├── group_vars       
 │   │   └── linux.yaml
-│   └── hosts.ini
+│   └── hosts.ini      
 ├── LICENSE
 ├── playbooks
 │   ├── app-php.yaml
