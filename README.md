@@ -13,6 +13,7 @@ Este repositorio contiene el conjunto completo de herramientas usadas en el tall
  
 ### Estructura del repositorio
 
+```
 tree
 ├── collections/
 │   └── requirements.yaml
@@ -37,7 +38,7 @@ tree
 │   └── db_config.j2
 └── vars/
     └── database.yaml
-
+```
     
 - `inventory/`
   - `hosts.ini`: definición de hosts y grupos.
