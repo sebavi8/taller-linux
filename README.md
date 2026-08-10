@@ -9,7 +9,7 @@ Trabajo realizados con ansible durante el taller
  
 ## Descripción del proyecto
  
-Este repositorio contiene el conjunto completo de artefactos usados en el taller de Linux con Ansible. Incluye inventario, playbooks, archivos de configuración y plantillas para desplegar una aplicación PHP con MariaDB.
+Este repositorio contiene el conjunto completo de herramientas usadas en el taller de Linux con Ansible. Incluye inventario, playbooks, archivos de configuración y plantillas para desplegar una aplicación PHP con MariaDB.
  
 ### Estructura del repositorio
  
@@ -48,3 +48,4 @@ Este repositorio contiene el conjunto completo de artefactos usados en el taller
    - `ansible-playbook playbooks/app-php.yaml`
  
 Esta documentación describe el proyecto completo, sin enfocarse en cambios puntuales o problemas específicos.
+Autores: Sebastián Villar (354030) - Silvio Lewkowitz (258664) 🐧
