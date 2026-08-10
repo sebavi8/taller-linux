@@ -15,7 +15,7 @@ Este repositorio contiene el conjunto completo de herramientas usadas en el tall
 .
 ├── collections          
 │   └── requirements.yaml
-├── files          
+├── files   
 │   ├── jail.local
 │   └── schema.sql
 ├── inventory           
