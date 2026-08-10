@@ -13,7 +13,7 @@ Este repositorio contiene el conjunto completo de herramientas usadas en el tall
  
 ### Estructura del repositorio
 
-.
+tree
 ├── collections/
 │   └── requirements.yaml
 ├── files/
