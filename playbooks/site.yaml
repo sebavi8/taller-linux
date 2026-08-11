@@ -1,0 +1,19 @@
+---
+# Playbook principal para ejecutar la aplicación PHP en CentOS y MariaDB en Ubuntu.
+# El playbook incluye los playbooks específicos de cada servicio y respeta los
+# grupos de inventario definidos en inventory/hosts.ini.
+
+- name: Verificar distribución y grupo de cada host Linux
+  hosts: linux
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Mostrar datos del host
+      ansible.builtin.debug:
+        msg:
+          - "Host: {{ inventory_hostname }}"
+          - "Grupos: {{ group_names }}"
+          - "SO: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+
+- import_playbook: app-php.yaml
+- import_playbook: db-mariadb.yaml
