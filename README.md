@@ -28,7 +28,6 @@ tree
 ├── playbooks/
 │   ├── app-php.yaml
 │   ├── db-mariadb.yaml
-│   ├── hardening.yaml
 │   ├── reload_apache.yaml
 │   └── Requisitos.yaml
 ├── README.md
