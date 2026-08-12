@@ -34,7 +34,7 @@
         port: 3306
         proto: tcp
         rule: allow
-        source: "{{ hostvars['centos01']['ansible_host'] }}"
+        src: "{{ hostvars['centos01']['ansible_host'] }}"
 
     # Tarea 5: Crear la base de datos
     - name: Crear la base de datos de la aplicación
