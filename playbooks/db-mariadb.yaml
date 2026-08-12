@@ -49,13 +49,22 @@
         dest: /tmp/schema.sql
         mode: '0600'
 
-    # Tarea 7: Importar el esquema
-    - name: Importar el esquema inicial
+    # Tarea 7: Importar el esquema (idempotente)
+    - name: Comprobar si la tabla 'cumpleanios' existe
+      ansible.builtin.command: >
+        mysql -u root -S /var/run/mysqld/mysqld.sock -N -s -e
+        "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='{{ db_name }}' AND table_name='cumpleanios';"
+      register: cumple_table_check
+      changed_when: false
+
+    - name: Importar el esquema inicial si falta la tabla 'cumpleanios'
       community.mysql.mysql_db:
         name: "{{ db_name }}"
         state: import
         target: /tmp/schema.sql
         login_unix_socket: /var/run/mysqld/mysqld.sock
+      when: cumple_table_check.stdout | int == 0
+
 
     # Tarea 8: Insertar datos iniciales de cumpleaños
     - name: Insertar datos iniciales de cumpleanios
