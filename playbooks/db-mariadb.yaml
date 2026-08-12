@@ -28,12 +28,13 @@
         state: started
         enabled: true
 
-    # Tarea 4: Configura el cortafuegos
-    - name: Permitir conexiones
+    # Tarea 4: Configura el cortafuegos para permitir solo la web
+    - name: Permitir conexiones desde la máquina web solo en el puerto 3306
       community.general.ufw:
         port: 3306
         proto: tcp
         rule: allow
+        source: "{{ hostvars['centos01']['ansible_host'] }}"
 
     # Tarea 5: Crear la base de datos
     - name: Crear la base de datos de la aplicación
